@@ -1,39 +1,39 @@
-import "reflect-metadata";
+import { Decimal128, ObjectId, UUID } from 'bson';
+import { classModel, property } from './decorators';
 
-const typeMetadataKey = Symbol("type");
-function property(type: string) {
-  return Reflect.metadata(typeMetadataKey, type);
-}
+@classModel()
+class TestModel {
+    @property()
+    _id: ObjectId;
 
-function getType(target: any, propertyKey: string) {
-  return Reflect.getMetadata(typeMetadataKey, target, propertyKey);
-}
+    @property({type: 'int', indexed: true})
+    age: number;
 
-function test(C: any):any {
-    console.log("where am i called?")
-    return class extends C{
-            constructor(){
-                super()
-                this.a=3
-            }
-            static schema = {value:"test"}
-        }
-}
+    @property({ primary: true })
+    name: string;
 
-@test
-class A {
-    @property("number")
-    a:number 
+    @property({ optional: true })
+    large?: Decimal128;
 
-    constructor(){
-        this.a = 2
+    @property({ optional: true })
+    uuid?: UUID;
+
+    @property({ optional: true })
+    hasKids?: boolean;
+
+    @property({ optional: true })
+    friends?: Array<string>;
+
+    constructor(age: number, name: string) {
+      this.age = age;
+      this.name = name;
     }
 }
 
-//@ts-ignore
-console.log("before instantiation", A.schema)
-const a = new A()
-//@ts-ignore
-console.log("after:", a.schema)
-console.log(a.a)
+// @ts-ignore
+console.log("SCHEMA:", TestModel.schema);
+
+const tm = new TestModel(3, 'Jens');
+console.log('>> TEST:', tm);
+
 
