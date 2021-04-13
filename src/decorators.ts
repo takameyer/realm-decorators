@@ -10,8 +10,8 @@ export type ClassModelOptions = Partial<{
   embedded: boolean
 }>
 
-export const classModel = (options: ClassModelOptions = {}): ClassDecorator => {
-  return function ClassModelDecorator<T extends Function>(constructor: T) {
+export const classModel = (options: ClassModelOptions = {}): ClassDecorator =>
+  <T extends Function>(constructor: T) => {
     const schemaTargetName = constructor.name;
     const schema = getPartialSchema(schemaTargetName);
 
@@ -23,7 +23,6 @@ export const classModel = (options: ClassModelOptions = {}): ClassDecorator => {
     // attach schema as a static prop on the type (in the future, register with Realm directly)
     (constructor as any).schema = schema;
   }
-}
 
 export type PropertyOptions = Partial<{
   type: string,
@@ -34,8 +33,8 @@ export type PropertyOptions = Partial<{
   default: any,
 }>
 
-export const property = (options: PropertyOptions = {}): PropertyDecorator => {
-  return function PropertyDecorator (target: Object, key: string): void | PropertyDescriptor {
+export const property = (options: PropertyOptions = {}): PropertyDecorator =>
+  (target: Object, key: string) => {
     const schemaTargetName = target.constructor.name;
     const schema = getPartialSchema(schemaTargetName);
 
@@ -85,6 +84,5 @@ export const property = (options: PropertyOptions = {}): PropertyDecorator => {
 
     schema.properties[key] = properties;
   }
-}
 
 // TODO: backlinkProperty?
