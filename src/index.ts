@@ -6,7 +6,7 @@ class TestModel {
     @property({ primary: true })
     _id: ObjectId;
 
-    @property({type: 'int', indexed: true })
+    @property({ type: 'int', indexed: true })
     age: number;
 
     @property()
