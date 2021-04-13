@@ -3,13 +3,13 @@ import { classModel, property } from './decorators';
 
 @classModel()
 class TestModel {
-    @property()
+    @property({ primary: true })
     _id: ObjectId;
 
-    @property({type: 'int', indexed: true})
+    @property({type: 'int', indexed: true })
     age: number;
 
-    @property({ primary: true })
+    @property()
     name: string;
 
     @property({ optional: true })
