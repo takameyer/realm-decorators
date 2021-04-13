@@ -1,126 +1,32 @@
-import { ObjectId } from "bson";
-import "reflect-metadata";
+import { Decimal128, ObjectId, UUID } from 'bson';
+import { classModel, property } from './decorators';
 
-const _schemas = {} 
+@classModel()
+class TestModel {
+    @property()
+    _id: ObjectId;
 
-// function property(
-//     target: any,
-//     key: string,
-//   ) {
-//       console.log(`target: ${target.constructor.name}` )
-//     const type = Reflect.getMetadata("design:type", target, key);
-//     //properties[key] = type?.name
-//   }
+    @property({type: 'int', indexed: true})
+    age: number;
 
-  interface AttributeProperties{
-    type: string,
-    optional?: boolean,
-    linkingObject?: string,
-    property?: string
-  }
+    @property({ primary: true })
+    name: string;
 
-  /**
-   * 
-    name: 'TodoItem',
-    properties: {
-      _id: 'objectId',
-      description: 'string',
-      done: {type: 'bool', default: false},
-      lists: {
-        type: 'linkingObjects',
-        objectType: 'TodoList',
-        property: 'items',
-      },
-      deadline: 'date?',
-    },
-    primaryKey: '_id',
-   */
+    @property({ optional: true })
+    large?: Decimal128;
 
-function property(properties?: AttributeProperties) {
-    return function(target:any, key:string){
-        const schema = getSchemaFromTarget(target)
-        const type = Reflect.getMetadata("design:type", target, key);
-        schema.properties[key] = {type: type?.name, ...properties }
-    }
-  }
+    @property({ optional: true })
+    uuid?: UUID;
 
-  function getSchemaFromTarget(target){
-    if(_schemas[target.constructor.name] == undefined){
-        _schemas[target.constructor.name] = {
-            name: target.constructor.name,
-            properties: {}
+    @property({ optional: true })
+    hasKids?: boolean;
 
-        }
-    }
-    return _schemas[target.constructor.name]
-  }
+    @property({ optional: true })
+    friends?: Array<string>;
 
-function primaryKey(
-    target: any,
-    key: string,
-  ) {
-        const schema = getSchemaFromTarget(target)
-        schema.primaryKey = key
-  }
-
-function linked(properties?: AttributeProperties) {
-    return function(target:any, key:string){
-        const schema = getSchemaFromTarget(target)
-        const type = Reflect.getMetadata("design:type", target, key);
-        schema.properties[key] = {type: properties?.type || type?.name, optional: properties?.optional || false }
-    }
-  }
-
-
-type Constructor = { new (...args: any[]): any };
-
-type Float = number
-
-function realm<T extends Constructor>(BaseClass: T) {
-    console.log("here first?")
-    //@ts-ignore
-    const test = Reflect.getMetadata("design:type", BaseClass, "count") 
-    console.log("my type: ", test?.name)
-    return class extends BaseClass {
-        static schema = _schemas[BaseClass.name]
-    }
-}
-
-class Collection{}
-
-@realm
-class A{
-    @property() @primaryKey _id: ObjectId
-    @property({type: 'double', linkingObject: 'B', property: 'items' }) @primaryKey count: number 
-    @property() weight?: Float
-    @property() name: string[]
-
-    primaryKey?: string
-
-    constructor(){
-        this._id = new ObjectId()
-        this.count = 2
-        //this.weight = 2.2
-        this.name = ['andrew']
-    }
-
-    static schema = {}
-}
-
-@realm
-class B{
-    @property({type: 'ObjectId', optional: true}) @primaryKey _id: ObjectId
-    @property() count: number 
-    @property() weight?: Float
-    @property() name: string[]
-
-    primaryKey?: string
-
-    constructor(){
-        this._id = new ObjectId()
-        this.count = 2
-        //this.weight = 2.2
-        this.name = ['andrew']
+    constructor(age: number, name: string) {
+      this.age = age;
+      this.name = name;
     }
 
     
@@ -129,9 +35,5 @@ class B{
 
 }
 
-const obj = new A()
-
-console.log("A schema", A.schema)  // schema { properties: { count: 'Number', name: 'String' } }
-
-const obj2 = new B()
-console.log("B schema", B.schema)  // schema { properties: { count: 'Number', name: 'String' } }
+// @ts-ignore
+console.log("SCHEMA:", TestModel.schema);
