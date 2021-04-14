@@ -61,11 +61,6 @@ export const property = (options: PropertyOptions = {}): PropertyDecorator =>
     // NOTE: should we parse it/clean it up the same way it's currently works, e.g. 'string?[]'
     console.log('typeOverride', typeOverride)
     if (typeOverride) {
-      const isOptional = typeOverride.includes('?');
-      const isList = typeOverride.includes('[');
-      const isDict = typeOverride.includes('{');
-      const isSet = typeOverride.includes('<');
-
       const cleanedType = typeOverride.replace(CLEAN_PROPERTY_DECLARATION_REGEX, '');
 
       // optional check
