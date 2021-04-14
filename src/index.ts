@@ -21,7 +21,7 @@ class TestModel {
     @property({ optional: true })
     hasKids?: boolean;
 
-    @property({ optional: true })
+    @property({ type: 'string[]?' })
     friends?: Array<string>;
 
     constructor(age: number, name: string) {
