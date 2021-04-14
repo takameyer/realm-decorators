@@ -1,38 +1,42 @@
 import { Decimal128, ObjectId, UUID } from 'bson';
 import { classModel, property } from './decorators';
 
+@classModel({ name: "", embedded: true })
+class EmbeddedModel {
+    @property()
+    name: string;
+}
+
 @classModel()
 class TestModel {
     @property({ primary: true })
     _id: ObjectId;
 
     @property({ type: 'int', indexed: true })
-    age: number;
+    manNumber: number;
 
     @property()
-    name: string;
+    manString: string;
 
     @property({ optional: true })
-    large?: Decimal128;
+    optDecimal?: Decimal128;
 
     @property({ optional: true })
-    uuid?: UUID;
+    optUuid?: UUID;
 
     @property({ optional: true })
-    hasKids?: boolean;
+    optBool?: boolean;
 
     @property({ type: 'string[]?' })
-    friends?: Array<string>;
-
-    constructor(age: number, name: string) {
-      this.age = age;
-      this.name = name;
-    }
-
+    optStringList?: Array<string>;
     
+    @property({ type: 'EmbeddedModel[]?' })
+    optEmbeddedObjects?: Realm.List<EmbeddedModel>;
 
-    static schema = {}
-
+    constructor(num: number, str: string) {
+      this.manNumber = num;
+      this.manString = str;
+    }
 }
 
 // @ts-ignore

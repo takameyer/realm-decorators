@@ -5,17 +5,18 @@ import { getRealmType } from './utils';
 const CLEAN_PROPERTY_DECLARATION_REGEX = /[\[\]{}<>\?]/g // chars: [ ] { } < > ?
 
 const schemaMap: { [type: string]: Partial<ObjectSchema> } = {};
-const getPartialSchema = (name: string): Partial<ObjectSchema> => schemaMap[name] ?? (schemaMap[name] = { properties: {} });
 
-export type ClassModelOptions = Partial<{
-  name: string,
-  embedded: boolean
-}>
+const getPartialSchema = (name: string): Partial<ObjectSchema> => 
+  schemaMap[name] ?? (schemaMap[name] = { properties: {} });
+
+export type ClassModelOptions = {
+  name?: string,
+  embedded?: boolean
+}
 
 export const classModel = (options: ClassModelOptions = {}): ClassDecorator =>
   <T extends Function>(constructor: T) => {
-    const schemaTargetName = constructor.name;
-    const schema = getPartialSchema(schemaTargetName);
+    const schema = getPartialSchema(constructor.name);
 
     schema.name = options.name ?? constructor.name;
     if (options.embedded) {
@@ -26,19 +27,18 @@ export const classModel = (options: ClassModelOptions = {}): ClassDecorator =>
     (constructor as any).schema = schema;
   }
 
-export type PropertyOptions = Partial<{
-  type: string,
-  primary: boolean,
-  indexed: boolean,
-  optional: boolean,
-  mapTo: string,
-  default: any,
-}>
+export type PropertyOptions = {
+  type?: string,
+  primary?: boolean,
+  indexed?: boolean,
+  optional?: boolean,
+  mapTo?: string,
+  default?: any,
+}
 
 export const property = (options: PropertyOptions = {}): PropertyDecorator =>
   (target: Object, key: string) => {
-    const schemaTargetName = target.constructor.name;
-    const schema = getPartialSchema(schemaTargetName);
+    const schema = getPartialSchema(target.constructor.name);
 
     const metadata = Reflect.getMetadata("design:type", target, key);
 
