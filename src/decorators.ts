@@ -2,6 +2,8 @@ import 'reflect-metadata';
 import { ObjectSchema, ObjectSchemaProperty } from 'realm';
 import { getRealmType } from './utils';
 
+const CLEAN_PROPERTY_DECLARATION_REGEX = /[\[\]{}<>\?]/g // chars: [ ] { } < > ?
+
 const schemaMap: { [type: string]: Partial<ObjectSchema> } = {};
 const getPartialSchema = (name: string): Partial<ObjectSchema> => schemaMap[name] ?? (schemaMap[name] = { properties: {} });
 
@@ -57,18 +59,32 @@ export const property = (options: PropertyOptions = {}): PropertyDecorator =>
     // TODO: List/Array detection (& setting objectType to the generic-wrapped type).
 
     // NOTE: should we parse it/clean it up the same way it's currently works, e.g. 'string?[]'
+    console.log('typeOverride', typeOverride)
     if (typeOverride) {
+      const isOptional = typeOverride.includes('?');
+      const isList = typeOverride.includes('[');
+      const isDict = typeOverride.includes('{');
+      const isSet = typeOverride.includes('<');
+
+      const cleanedType = typeOverride.replace(CLEAN_PROPERTY_DECLARATION_REGEX, '');
+
       // optional check
       if (typeOverride.includes('?')) {
         rest.optional = true;
       }
-      // list check
-      if (typeOverride.includes('[')) {
-        objectType = type;
-        type = 'list';
-      }
 
-      type = typeOverride.replace(/\[\]\?/g, '');
+      if (typeOverride.includes('[')) {
+        objectType = cleanedType;
+        type = 'list';
+      } else if (typeOverride.includes('{')) {
+        objectType = cleanedType;
+        type = 'dict'; // TODO: or is it 'dictionary'?
+      } else if (typeOverride.includes('<')) {
+        objectType = cleanedType;
+        type = 'set';
+      } else {
+        type = typeOverride;
+      }
     }
 
     type = getRealmType(type);
