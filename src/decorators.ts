@@ -68,7 +68,6 @@ export const property = (options: PropertyOptions = {}): PropertyDecorator => (
   // TODO: List/Array detection (& setting objectType to the generic-wrapped type).
 
   // NOTE: should we parse it/clean it up the same way it's currently works, e.g. 'string?[]'
-  console.log("typeOverride", typeOverride);
   if (typeOverride) {
     const cleanedType = typeOverride.replace(
       CLEAN_PROPERTY_DECLARATION_REGEX,

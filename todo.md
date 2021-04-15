@@ -1,6 +1,7 @@
 - support DATA (and any other missing types?)
 - refactor project to be used as an importable lib in realm project
-- refactor src/index.ts into the jest tests and use the index to export the decorators
+- ~~refactor src/index.ts into the jest tests and use the index to export the decorators~~
+- figure out how to remove ts-errors for accessing 'schema'
 - write a README
 - create an example
 - find more features of realm that we are not addressing
