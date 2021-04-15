@@ -45,6 +45,7 @@ class TestModel {
 class Item {
   @property({ primary: true })
   _id: ObjectId;
+
   @linkedTo(TestModel, "items")
   models: any;
 }
@@ -72,18 +73,18 @@ describe("decorator", () => {
       name: "TestModel",
     });
 
-    //@ts-ignore
-    console.log("LINKEDSCHEMA: ", Item.schema);
-    expect(true).toBe(true);
-
     // @ts-ignore
-    expect(Item.schema).toStrictEqual({ properties:
-        { _id: { type: 'objectId', indexed: true },
-          models:
-           { type: 'linkingObjects',
-             objectType: 'TestModel',
-             property: 'items' } },
-       primaryKey: '_id',
-       name: 'Item' })
+    expect(Item.schema).toStrictEqual({
+      properties: {
+        _id: { type: "objectId", indexed: true },
+        models: {
+          type: "linkingObjects",
+          objectType: "TestModel",
+          property: "items",
+        },
+      },
+      primaryKey: "_id",
+      name: "Item",
+    });
   });
 });
