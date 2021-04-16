@@ -49,8 +49,14 @@ export const property = (options: PropertyOptions = {}): PropertyDecorator => (
 
   const metadata = Reflect.getMetadata("design:type", target, key);
 
-  let type: string = metadata.name;
+  let type: string = metadata?.name;
   let objectType: string | undefined;
+
+  if (!type && !options.type) {
+    throw new Error(
+      `Not able to derive type from ${key}. Set and explicit 'type' to fix this.`
+    );
+  }
 
   const { type: typeOverride, primary, ...rest } = options;
 

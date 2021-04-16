@@ -15,3 +15,5 @@ lerna-debug.log*
 
 # Editor specifics
 .vscode
+
+dist
