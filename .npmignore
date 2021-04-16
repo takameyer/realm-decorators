@@ -1,0 +1,12 @@
+# Ignore everything:
+*
+
+# Except for:
+!package.json
+!package-lock.json
+!README.md
+!dist/**
+
+# But not:
+dist/**/*.tests.ts
+dist/**/__tests__
