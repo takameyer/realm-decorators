@@ -1,5 +1,6 @@
 import { Decimal128, ObjectId, UUID } from 'bson'
 import { classModel, linkedTo, property } from '../'
+
 @classModel({ name: '', embedded: true })
 class EmbeddedModel {
   @property()
