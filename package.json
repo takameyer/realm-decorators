@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
+    "prepack": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
-    "format": "prettier --write src/**/*.ts",
-    "install": "npx tsc"
+    "format": "prettier --write src/**/*.ts"
   },
   "author": "",
   "license": "ISC",
